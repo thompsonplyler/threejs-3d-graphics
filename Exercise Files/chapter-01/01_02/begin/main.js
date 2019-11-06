@@ -3,17 +3,21 @@ function init(){
     const box = getBox(1,1,1) // defines dimensions of box for the scene
     // box.position.y = 0.5; // this elevates the box above the plane, but it only works when the box is 1 height.
     box.position.y = box.geometry.parameters.height/2; // this works regardless of the height of the box. 
-    
+    const sphere = getSphere(.05)
     const plane = getPlane(80)
     // plane.rotation.x = 90 // rotate the plane 90 radians around its x-axis
     plane.rotation.x = Math.PI/2 // rotate the plane 90 DEGREES around its x-axis
-    scene.add(plane); // adds the plane to the scene
     plane.name = 'plane-1';
-
-
-    scene.fog = new THREE.FogExp2(0xffffff, 0.02) 
     
+    enableFog = false
+    if (enableFog) {scene.fog = new THREE.FogExp2(0xffffff, 0.02) }
+    
+    const pointLight = getPointLight(1)
+    pointLight.add(sphere)
+
+    scene.add(plane); // adds the plane to the scene
     scene.add(box); // adds the box as a child of the plane
+    scene.add(pointLight) 
 
     const camera = new THREE.PerspectiveCamera(
         45, //fov
@@ -23,21 +27,23 @@ function init(){
     ); // defines camera for the scene
 
     
+    pointLight.position.y = 2
+    
     // by default camera and object are created at 0,0,0
     // view intersects with box created. 
     // adjusting camera's x,y,z and lookat() value consts the 
     // viewer observe the object
 
-    camera.position.x = 12;
-    camera.position.y = 11;
-    camera.position.z = 45;
+    camera.position.x = 2;
+    camera.position.y = 3;
+    camera.position.z = 8;
     camera.lookAt(new THREE.Vector3(0, 0, 0)); // Vector3 is a coordinate in 3D space.
     
     
     const renderer = new THREE.WebGLRenderer(); // use WebGL instead of SVG or canvas
 
     renderer.setSize(window.innerWidth, window.innerHeight); // determine width/height of renderer
-    renderer.setClearColor('#ffffff')
+    // renderer.setClearColor('#ffffff')
     document.getElementById('webgl').appendChild(renderer.domElement) // assign placement of renderer.domElement in HTML document
 
     update(renderer,scene,camera)
@@ -45,10 +51,10 @@ function init(){
 
 function getBox(w,h,d) {
     const geometry = new THREE.BoxGeometry(w,h,d); // declare the box dimensions
+
     
-    // default material is "mesh basic material" which is unaffected by lighting in the scene. 
-    const material = new THREE.MeshBasicMaterial({
-        color: 0x00ff00
+    const material = new THREE.MeshPhongMaterial({
+        color: 0x535353
     });  // defines basic material and assigns it a color.
 
     const mesh = new THREE.Mesh(
@@ -62,8 +68,8 @@ function getBox(w,h,d) {
 function getPlane(size) {
     const geometry = new THREE.PlaneGeometry(size,size);
 
-    const material = new THREE.MeshBasicMaterial({
-        color: 0xff0000,
+    const material = new THREE.MeshPhongMaterial({
+        color: 0xA3A3A3,
         side: THREE.DoubleSide
     });  // defines basic material and assigns it a color.
 
@@ -91,6 +97,31 @@ function update (renderer, scene, camera) {     // update seems to be a special 
 
             var plane = scene.getObjectByName('plane-1')
 
+}
+
+function getPointLight(intensity){
+    const light = new THREE.PointLight(0xffffff, intensity)
+    console.log(light)
+    return light
+}
+
+function getSphere(size){
+    const geometry = new THREE.SphereGeometry(size, 24,24);     // second arguments are 
+                                                                // the width and segment 
+                                                                // values-- segment values 
+                                                                // determine smoothness
+
+    
+    const material = new THREE.MeshBasicMaterial({
+        color: 0xffffff
+    });  // defines basic material and assigns it a color.
+
+    const mesh = new THREE.Mesh(
+        geometry,
+        material
+    ) // creates a mesh with the properties defines above
+ 
+       return mesh
 }
 
 init();
