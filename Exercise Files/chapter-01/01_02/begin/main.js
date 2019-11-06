@@ -34,10 +34,7 @@ function init(){
     renderer.setSize(window.innerWidth, window.innerHeight); // determine width/height of renderer
     document.getElementById('webgl').appendChild(renderer.domElement) // assign placement of renderer.domElement in HTML document
 
-    renderer.render(
-        scene,
-        camera
-        ); // render, obviously.
+    update(renderer,scene,camera)
 };
 
 function getBox(w,h,d) {
@@ -70,6 +67,19 @@ function getPlane(size) {
  
        return mesh
 
+}
+
+function update (renderer, scene, camera) {
+    renderer.render(
+        scene,
+        camera
+        ); // render, obviously.
+
+        requestAnimationFrame(function(){
+            update(renderer, scene, camera);
+        })  // what we did with the update was set up a function 
+            // that gets recursively called by the requestAnimationFrame 
+            // function about 60Hz
 }
 
 init();
