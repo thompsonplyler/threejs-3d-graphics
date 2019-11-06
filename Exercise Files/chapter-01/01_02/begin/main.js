@@ -1,8 +1,12 @@
 function init(){
     const scene = new THREE.Scene();
     const box = getBox(1,1,1) // defines dimensions of box for the scene
-    const plane = getPlane(4)
-    plane.rotation.x = 90 // rotate the plane 90 degrees around its x-axis
+    // box.position.y = 0.5; // this elevates the box above the plane, but it only works when the box is 1 height.
+    box.position.y = box.geometry.parameters.height/2; // this works regardless of the height of the box. 
+    
+    const plane = getPlane(80)
+    // plane.rotation.x = 90 // rotate the plane 90 radians around its x-axis
+    plane.rotation.x = Math.PI/2 // rotate the plane 90 DEGREES around its x-axis
     scene.add(box); // adds the box to the scene
     scene.add(plane);
 
