@@ -9,7 +9,11 @@ function init(){
     plane.rotation.x = Math.PI/2 // rotate the plane 90 DEGREES around its x-axis
     scene.add(plane); // adds the plane to the scene
     plane.name = 'plane-1';
-    plane.add(box); // adds the box as a child of the plane
+
+
+    scene.fog = new THREE.FogExp2(0xffffff, 0.02) 
+    
+    scene.add(box); // adds the box as a child of the plane
 
     const camera = new THREE.PerspectiveCamera(
         45, //fov
@@ -24,15 +28,16 @@ function init(){
     // adjusting camera's x,y,z and lookat() value consts the 
     // viewer observe the object
 
-    camera.position.x = 1;
-    camera.position.y = 2;
-    camera.position.z = 5;
+    camera.position.x = 12;
+    camera.position.y = 11;
+    camera.position.z = 45;
     camera.lookAt(new THREE.Vector3(0, 0, 0)); // Vector3 is a coordinate in 3D space.
-
+    
     
     const renderer = new THREE.WebGLRenderer(); // use WebGL instead of SVG or canvas
 
     renderer.setSize(window.innerWidth, window.innerHeight); // determine width/height of renderer
+    renderer.setClearColor('#ffffff')
     document.getElementById('webgl').appendChild(renderer.domElement) // assign placement of renderer.domElement in HTML document
 
     update(renderer,scene,camera)
@@ -40,6 +45,7 @@ function init(){
 
 function getBox(w,h,d) {
     const geometry = new THREE.BoxGeometry(w,h,d); // declare the box dimensions
+    
     // default material is "mesh basic material" which is unaffected by lighting in the scene. 
     const material = new THREE.MeshBasicMaterial({
         color: 0x00ff00
@@ -84,14 +90,7 @@ function update (renderer, scene, camera) {     // update seems to be a special 
             // function about 60Hz
 
             var plane = scene.getObjectByName('plane-1')
-            plane.rotation.y += 0.01
-            plane.rotation.z += 0.01 // these animations strictly work on the plane itself, which we called 'plane-1' above
-            
-            
-            scene.traverse(function(children){
-                children.scale.x += 0.001   // this traverses the entire object, starting at the plane and including all objects, so the 
-                                            // box and the plane both grow in scale along the x-axis 
-            })
+
 }
 
 init();
