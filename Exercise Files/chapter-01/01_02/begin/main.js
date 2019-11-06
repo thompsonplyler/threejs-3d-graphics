@@ -7,8 +7,9 @@ function init(){
     const plane = getPlane(80)
     // plane.rotation.x = 90 // rotate the plane 90 radians around its x-axis
     plane.rotation.x = Math.PI/2 // rotate the plane 90 DEGREES around its x-axis
-    scene.add(box); // adds the box to the scene
-    scene.add(plane);
+    scene.add(plane); // adds the plane to the scene
+    plane.name = 'plane-1';
+    plane.add(box); // adds the box as a child of the plane
 
     const camera = new THREE.PerspectiveCamera(
         45, //fov
@@ -69,7 +70,8 @@ function getPlane(size) {
 
 }
 
-function update (renderer, scene, camera) {
+function update (renderer, scene, camera) {     // update seems to be a special name, like in Phaser.io, where it runs at 60 Hz
+                                                // changing the name of this function makes the rotation stop. 
     renderer.render(
         scene,
         camera
@@ -80,6 +82,16 @@ function update (renderer, scene, camera) {
         })  // what we did with the update was set up a function 
             // that gets recursively called by the requestAnimationFrame 
             // function about 60Hz
+
+            var plane = scene.getObjectByName('plane-1')
+            plane.rotation.y += 0.01
+            plane.rotation.z += 0.01 // these animations strictly work on the plane itself, which we called 'plane-1' above
+            
+            
+            scene.traverse(function(children){
+                children.scale.x += 0.001   // this traverses the entire object, starting at the plane and including all objects, so the 
+                                            // box and the plane both grow in scale along the x-axis 
+            })
 }
 
 init();
