@@ -7,15 +7,15 @@ function init() {
 	if (enableFog) {
 		scene.fog = new THREE.FogExp2(0xffffff, 0.2);
 	}
-	
+
 	var plane = getPlane(30);
-	var pointLight = getPointLight(1);
+	var spotLight = getStLight(1);
 	var sphere = getSphere(0.05);
 	var boxGrid = getBoxGrid(10, 1.5);
 
 	plane.name = 'plane-1';
 
-	plane.rotation.x = Math.PI/2;
+	plane.rotation.x = Math.PI / 2;
 	pointLight.position.y = 2;
 	pointLight.intensity = 2;
 
@@ -29,7 +29,7 @@ function init() {
 
 	var camera = new THREE.PerspectiveCamera(
 		45,
-		window.innerWidth/window.innerHeight,
+		window.innerWidth / window.innerHeight,
 		1,
 		1000
 	);
@@ -60,7 +60,7 @@ function getBox(w, h, d) {
 	});
 	var mesh = new THREE.Mesh(
 		geometry,
-		material 
+		material
 	);
 	mesh.castShadow = true;
 
@@ -70,22 +70,22 @@ function getBox(w, h, d) {
 function getBoxGrid(amount, separationMultiplier) {
 	var group = new THREE.Group();
 
-	for (var i=0; i<amount; i++) {
+	for (var i = 0; i < amount; i++) {
 		var obj = getBox(1, 1, 1);
 		obj.position.x = i * separationMultiplier;
-		obj.position.y = obj.geometry.parameters.height/2;
+		obj.position.y = obj.geometry.parameters.height / 2;
 		group.add(obj);
-		for (var j=1; j<amount; j++) {
+		for (var j = 1; j < amount; j++) {
 			var obj = getBox(1, 1, 1);
 			obj.position.x = i * separationMultiplier;
-			obj.position.y = obj.geometry.parameters.height/2;
+			obj.position.y = obj.geometry.parameters.height / 2;
 			obj.position.z = j * separationMultiplier;
 			group.add(obj);
 		}
 	}
 
-	group.position.x = -(separationMultiplier * (amount-1))/2;
-	group.position.z = -(separationMultiplier * (amount-1))/2;
+	group.position.x = -(separationMultiplier * (amount - 1)) / 2;
+	group.position.z = -(separationMultiplier * (amount - 1)) / 2;
 
 	return group;
 }
@@ -98,7 +98,7 @@ function getPlane(size) {
 	});
 	var mesh = new THREE.Mesh(
 		geometry,
-		material 
+		material
 	);
 	mesh.receiveShadow = true;
 
@@ -112,7 +112,7 @@ function getSphere(size) {
 	});
 	var mesh = new THREE.Mesh(
 		geometry,
-		material 
+		material
 	);
 
 	return mesh;
@@ -133,7 +133,7 @@ function update(renderer, scene, camera, controls) {
 
 	controls.update();
 
-	requestAnimationFrame(function() {
+	requestAnimationFrame(function () {
 		update(renderer, scene, camera, controls);
 	})
 }
